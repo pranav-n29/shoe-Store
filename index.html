@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shoe Shop — Demo (Fixed)</title>
+
+  <!-- Bootstrap CSS (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Tailwind Play CDN (applies utility classes) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body class="bg-gray-50">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <svg width="32" height="32" viewBox="0 0 24 24" class="me-1">
+          <path fill="currentColor" d="M7 14c0 2.76 2.24 5 5 5s5-2.24 5-5H7z" opacity=".3"/>
+          <path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5zm0 7.6L6.1 7 12 4.4 17.9 7 12 9.6zM2 17l10 5 10-5v-2L12 20 2 15v2z"/>
+        </svg>
+        <strong>ShoeStop</strong>
+      </a>
+
+      <!-- removed navbar-toggler to always show full menu (no hamburger) -->
+      <div class="navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item me-2">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item me-2">
+            <a class="nav-link" href="#offers">Offers</a>
+          </li>
+          <li class="nav-item me-2">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">About</a>
+          </li>
+
+          <li class="nav-item me-2">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#ordersModal">Orders</a>
+          </li>
+          <li class="nav-item me-2">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">Profile</a>
+          </li>
+
+          <li class="nav-item me-3">
+            <div class="input-group">
+              <input id="searchInput" type="search" class="form-control" placeholder="Search shoes..." aria-label="Search">
+              <button id="searchBtn" class="btn btn-outline-secondary">Search</button>
+            </div>
+          </li>
+
+          <li class="nav-item me-2">
+            <select id="categorySelect" class="form-select">
+              <option value="all">All categories</option>
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="kids">Kids</option>
+            </select>
+          </li>
+
+          <li class="nav-item">
+            <div class="d-flex align-items-center">
+              <button id="authBtn" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#authModal">Login / Register</button>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cartModal">
+                Cart <span id="cartCount" class="badge bg-light text-dark ms-1">0</span>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="py-6 bg-gradient-to-r from-sky-50 to-white">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h1 class="display-6">Step into comfort — find your perfect shoe.</h1>
+          <p class="lead text-muted">Make Your shoe Perfect like You</p>
+          <a href="#products" class="btn btn-outline-primary me-2">Shop now</a>
+          <a href="#products" class="btn btn-link">Explore collection</a>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block">
+          <img src="data:image/png;base64,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" alt="Shoe illustration" class="img-fluid">
+      </div>
+    </div>
+  </header>
+
+      <!-- AUTH MODAL -->
+      <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Login / Register</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div id="authWelcome" class="mb-3" style="display:none">
+                <div class="fw-semibold">Signed in as <span id="authUserName">—</span></div>
+                <div class="small text-muted" id="authUserEmail">—</div>
+                <div class="mt-2"><button id="logoutBtn" class="btn btn-sm btn-outline-danger">Logout</button></div>
+              </div>
+
+              <ul class="nav nav-tabs" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTab" type="button" role="tab">Login</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerTab" type="button" role="tab">Register</button>
+                </li>
+              </ul>
+              <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="loginTab" role="tabpanel">
+                  <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input id="loginEmail" class="form-control" type="email" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input id="loginPassword" class="form-control" type="password" />
+                  </div>
+                  <div id="loginMsg" class="small text-danger mb-2"></div>
+                  <div class="d-flex justify-content-end">
+                    <button id="loginBtn" class="btn btn-primary">Login</button>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="registerTab" role="tabpanel">
+                  <div class="mb-3">
+                    <label class="form-label">Full name</label>
+                    <input id="registerName" class="form-control" type="text" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input id="registerEmail" class="form-control" type="email" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input id="registerPassword" class="form-control" type="password" />
+                  </div>
+                  <div id="registerMsg" class="small text-danger mb-2"></div>
+                  <div class="d-flex justify-content-end">
+                    <button id="registerBtn" class="btn btn-outline-primary">Register</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  <!-- OFFER BANNER -->
+  <section id="offers" class="py-2 bg-gradient-to-r from-yellow-50 to-white border-top border-bottom">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-warning text-dark">Limited Time Offer</span>
+        <strong id="offerLabel">10% off on all orders — ends in</strong>
+        <div id="offerTimer" class="fw-semibold text-danger">00:10:00</div>
+      </div>
+      <div class="text-muted small">Use code: <span class="fw-bold">SHOESTOP10</span></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <main class="container my-6" id="products">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="h4 mb-0">Featured Shoes</h2>
+      <div class="text-muted">Showing <span id="shownCount">0</span> products</div>
+    </div>
+
+    <div id="productGrid" class="row g-4">
+      <!-- JS renders cards here -->
+    </div>
+  </main>
+
+  <!-- CART MODAL -->
+  <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Your Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="cartItems" class="list-group">
+            <!-- cart items -->
+          </div>
+          <div class="mt-3 d-flex justify-content-between align-items-center">
+            <div>
+              <small class="text-muted">Shipping estimate: Free over ₹2000</small>
+            </div>
+            <div>
+              <strong>Total: ₹<span id="cartTotal">0</span></strong>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="clearCartBtn" class="btn btn-outline-danger">Clear Cart</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Continue shopping</button>
+          <button id="checkoutBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkoutModal">Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Checkout — Finalize Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Order total</label>
+            <div><strong>₹<span id="checkoutTotal">0</span></strong></div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Apply offer</label>
+            <div><small id="appliedOffer" class="text-success">SHOESTOP10 — 10% off (auto applied while valid)</small></div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Booking for</label>
+            <div class="d-flex justify-content-between align-items-center">
+              <div><span id="bookingFor" class="fw-semibold">Not set</span></div>
+              <div><button id="editProfileFromCheckout" class="btn btn-sm btn-link">Edit profile</button></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Final price</label>
+            <div class="h4">₹<span id="finalPrice">0</span></div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Payment method</label>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-primary flex-fill" id="payCardBtn">Card</button>
+              <button class="btn btn-outline-primary flex-fill" id="payCashBtn">Cash</button>
+              <button class="btn btn-outline-primary flex-fill" id="payUpiBtn">UPI</button>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Delivery</label>
+            <div>Expected delivery: <strong id="expectedDelivery">—</strong></div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+          <button id="placeOrderBtn" class="btn btn-success">Place order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER SUCCESS MODAL -->
+  <div class="modal fade" id="orderSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Order Confirmed</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="mb-2">Thank you! Your order has been placed.</p>
+          <p class="mb-1">Expected delivery: <strong id="successDeliveryDate">—</strong></p>
+          <p class="mb-0">Delivery person: <strong id="deliveryName">Ravi Kumar</strong></p>
+          <p class="small text-muted">Contact: <span id="deliveryPhone">+91 98 7654 3210</span></p>
+          <hr>
+          <p class="mb-1">Booked by: <strong id="bookedByName">—</strong></p>
+          <p class="small text-muted">Contact: <span id="bookedByPhone">—</span></p>
+          <p class="small text-muted">Address: <span id="bookedByAddress">—</span></p>
+        </div>
+        <div class="modal-footer">
+          <button id="continueBookingBtn" class="btn btn-primary">Continue to book</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDERS MODAL -->
+  <div class="modal fade" id="ordersModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Your Orders</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="ordersList">
+            <div class="text-muted text-center py-4">No orders yet.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE MODAL -->
+  <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="profileForm">
+            <div class="mb-3">
+              <label class="form-label">Full name</label>
+              <input id="profileName" class="form-control" type="text" placeholder="Your name" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input id="profileEmail" class="form-control" type="email" placeholder="you@example.com" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input id="profilePhone" class="form-control" type="tel" placeholder="+91 9xxxxxxxxx" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <textarea id="profileAddress" class="form-control" rows="2" placeholder="Street, City, PIN"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="saveProfileBtn" class="btn btn-primary">Save Profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD-TO-CART TOAST -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="addToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">Added to cart</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- fixed cart button removed per user request -->
+
+  <!-- FOOTER -->
+  <!-- ABOUT (moved into modal) -->
+  <div class="modal fade" id="aboutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">About this demo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-2">This is a small demo storefront created to showcase a simple shopping UI and checkout flow. It is intended for learning and prototyping only.</p>
+          <h6>Built with</h6>
+          <ul>
+            <li>HTML5, semantic markup</li>
+            <li>CSS3 + custom styles in <code>index.css</code></li>
+            <li>Bootstrap 5 (CSS + JS bundle via CDN) for layout and modals</li>
+            <li>Tailwind Play CDN utilities for quick helpers (used lightly)</li>
+            <li>Vanilla JavaScript in <code>app.js</code> (products, cart, checkout, localStorage)</li>
+            <li>localStorage for persisting profile and orders (no backend)</li>
+            <li>Images from Unsplash / public demo assets</li>
+          </ul>
+          <h6>How to run</h6>
+          <p class="text-muted">Open <code>index.html</code> in a modern browser. No build step required. For development, serve the folder with a static server (e.g., Live Server) for nicer reloads.</p>
+          <h6>Notes</h6>
+          <p class="text-muted mb-0">Payments are mocked and delivery info is dummy data. Data is stored locally in your browser's localStorage.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-4 bg-white mt-4 border-top">
+    <div class="container text-center text-muted">
+      © <span id="year"></span> ShoeStop — demo store. Built with Bootstrap & Tailwind.
+    </div>
+  </footer>
+
+  <!-- Bootstrap bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- App JS -->
+  <script src="app.js"></script>
+</body>
+</html>
